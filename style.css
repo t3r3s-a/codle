@@ -1,0 +1,46 @@
+@font-face {
+    font-family: myFont;
+    src: url("assets/fonts/jersey/Jersey25-Regular.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal;
+}
+
+@font-face{
+    font-family: myFont2;
+    src: url("assets/fonts/jumps-winter/Jumps\ Winter.ttf") format("truetype");
+}
+
+body{
+    background-image: url("assets/images/pdia-b7319cda-031f-4109-b458-a8b379b6446d.jpg");
+}
+
+#title{
+    text-align:center;
+    font-family:myFont;
+    font-size:300%;
+    color:#f5ddbb;
+    -webkit-text-stroke-color:#98908d; 
+    -webkit-text-stroke-width: 2.5px;
+
+}
+
+.line{
+    display:flex;
+    justify-content: center;
+    gap:5px;
+    margin-bottom:5px;
+}
+
+input{
+    text-align: center;
+    background: #f5ddbb;
+    width: 50px;
+    height: 50px;
+    font-size:20px;
+    color:blanchedalmond;
+    -webkit-text-stroke-color:#98908d; 
+    -webkit-text-stroke-width: 2.5px;
+    font-family:myFont2;
+    text-transform:uppercase;
+    border: 2px solid #98908d;
+};
