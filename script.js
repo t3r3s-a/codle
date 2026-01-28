@@ -11,13 +11,23 @@ const words = [
     "PRINT", "RESET", "ROBOT", "ROUTE", "SCOPE", "SCRUM", "SERVE", "SLACK", "SLICE", "TOKEN"
 ];
 
+let dictionary=[];
+
+fetch("https://raw.githubusercontent.com/tabatkins/wordle-list/main/words")
+    .then(response => response.text())
+    .then(data => {
+        dictionary = data.split("\n").map(w => w.trim().toLowerCase());
+        console.log("Dictionary loaded");
+    })
+    .catch(error => console.error("Error loading dictionary", error));
+
 let selectedWord = words[Math.floor(Math.random() * words.length)];
 let cRow=1;
 
 let inseredWord="";
 let i=1;
 
-console.log("Palavra:" + selectedWord);
+console.log("Word:" + selectedWord);
 
 window.addEventListener("keydown", function(event){
     if (event.key=="Enter"){
@@ -29,16 +39,22 @@ window.addEventListener("keydown", function(event){
             if(idFound && idFound.value){
                 inseredWord += idFound.value.toUpperCase();
             }else{
-                console.error("Nao foi encontrado");
+                console.error("Not founded");
             }
 
         }
         if(inseredWord.length != 5){
-            console.log("Linha incompleta!");
+            console.log("Incomplete line");
         }else{
+            if(dictionary.includes(inseredWord.toLowerCase())){
             checkguess(inseredWord,selectedWord);
-            console.log("Linha completa");
+            console.log("Complete line");
             cRow++;
+            let tile=document.getElementById("tile-"+ cRow + "-" + 1);
+            if (tile) tile.focus();
+            }else{
+                console.log("Word doesnt exist");
+            }
         }
 
     }
@@ -57,25 +73,48 @@ function countOccurrences (letter,secret){
 }
 
 function checkguess(guess,secret){
-    let arrayOcurrences=[];
+    let ocurrences={};
     let countRight=0;
-    for(let j=0;j<5;j++){
-        arrayOcurrences[j]=countOccurrences(secret[j],secret);
+    for (let char of secret) {
+        ocurrences[char] = countOccurrences(char, secret);
     }
+    let status=[null,null,null,null,null];
     for(let i=0;i<5;i++){
-        let tile=document.getElementById("tile-"+ cRow + "-" + (i+1));
         let letter=guess[i];
 
         if(letter==secret[i]){
+            status[i]="correct";
+            ocurrences[letter]--;
             countRight++;
-
-        }else if (secret.includes(letter) && arrayOcurrences[i]>0){
-            arrayOcurrences[i]--;
         }
 
     }
+
+    for(let i=0;i<5;i++){
+        if (status[i]=="correct") continue;
+
+        let letter=guess[i];
+
+        if(secret.includes(letter) && ocurrences[letter]> 0){
+            status[i]="present";
+            ocurrences[letter]--;
+        }
+    }
+
+    for(let i=0;i<5;i++){
+
+        let tile=document.getElementById("tile-" + cRow + "-" + (i+1));
+        
+        if(status[i]=="correct"){
+            tile.classList.add("correct");
+        } else if (status[i]=="present"){
+            tile.classList.add("present");
+        }
+        tile.readOnly=true;
+    }
+
     if(countRight==5){
-        console.log("Adivinhou a palavra");
+        console.log("You won");
     }
 
 }
