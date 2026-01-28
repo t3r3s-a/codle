@@ -43,4 +43,17 @@ input{
     font-family:myFont2;
     text-transform:uppercase;
     border: 2px solid #98908d;
-};
+}
+
+.correct{
+    background-color: #538d4e   !important;
+    color: white !important;
+    border-color: #538d4e;
+}
+
+.present{
+    background-color: #b59f3b !important;
+    color: white !important;
+    border-color:#b59f3b !important;
+}
+
