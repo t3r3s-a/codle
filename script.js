@@ -7,7 +7,7 @@ const words = [
     "CHECK", "CHIPS", "CLASS", "CLEAN", "CLOSE", "COLOR", "COMMA", "COUNT", "CRASH", "CYBER",
     "DATAX", "DELAY", "DRIVE", "EMPTY", "ERASE", "FALSE", "FIELD", "FLASH", "FORTH", "GATES",
     "GLYPH", "GUARD", "HEAPS", "HOSTS", "IMAGE", "INBOX", "INNER", "KEYED", "LABEL", "LINKS",
-    "LOCAL", "LOOPS", "MACRO", "MEDIA", "MOUNT", "ORDER", "PANEL", "PARAM", "PATHS", "PHONE",
+    "LOCAL", "LOOPS", "MACRO", "MEDIA", "MOUNT", "ORDER", "PANEL", "PATHS", "PHONE",    
     "PRINT", "RESET", "ROBOT", "ROUTE", "SCOPE", "SCRUM", "SERVE", "SLACK", "SLICE", "TOKEN"
 ];
 
@@ -16,10 +16,13 @@ let dictionary=[];
 fetch("https://raw.githubusercontent.com/tabatkins/wordle-list/main/words")
     .then(response => response.text())
     .then(data => {
-        dictionary = data.split("\n").map(w => w.trim().toLowerCase());
+        let commonWords = data.split("\n").map(w => w.trim().toLowerCase());
+        let techWords = words.map(w => w.toLowerCase());
+        dictionary=[...commonWords, ...techWords]
         console.log("Dictionary loaded");
     })
     .catch(error => console.error("Error loading dictionary", error));
+
 
 let selectedWord = words[Math.floor(Math.random() * words.length)];
 let cRow=1;
@@ -47,11 +50,27 @@ window.addEventListener("keydown", function(event){
             console.log("Incomplete line");
         }else{
             if(dictionary.includes(inseredWord.toLowerCase())){
-            checkguess(inseredWord,selectedWord);
-            console.log("Complete line");
-            cRow++;
-            let tile=document.getElementById("tile-"+ cRow + "-" + 1);
+                checkguess(inseredWord,selectedWord);
+                console.log("Complete line");
+                cRow++;
+                    if (cRow<=6){
+
+                    for (let j = 1; j <= 5; j++) {
+
+                        let nextTile = document.getElementById("tile-" + cRow + "-" + j);
+                        if (nextTile){
+                            nextTile.readOnly = false;
+                        }
+                    }
+
+                    let tile=document.getElementById("tile-"+ cRow + "-" + 1);
+
             if (tile) tile.focus();
+            
+            }else{
+                console.log("You lost");
+                this.document.getElementById("defeat").style.display="flex";
+            }
             }else{
                 console.log("Word doesnt exist");
             }
@@ -59,6 +78,21 @@ window.addEventListener("keydown", function(event){
 
     }
 
+});
+
+document.querySelectorAll("input").forEach(tile => {
+    tile.addEventListener("input", function() {
+        if (this.value.length >= 1) {
+            let parts = this.id.split("-");
+            let row = parts[1];
+            let col = parseInt(parts[2]);
+
+            let next = document.getElementById("tile-" + row + "-" + (col + 1));
+            if (next) {
+                next.focus();
+            }
+        }
+    });
 });
 
 function countOccurrences (letter,secret){
@@ -115,6 +149,9 @@ function checkguess(guess,secret){
 
     if(countRight==5){
         console.log("You won");
+        document.getElementById("victory").style.display="flex";
     }
 
 }
+
+
