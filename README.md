@@ -2,6 +2,8 @@
 
 **Codle** is a programming-themed version of the popular Wordle game. Instead of general vocabulary, players are challenged to guess 5-letter keywords, functions, and concepts from the world of software development.
 
+![Game Image](assets/images/project.png)
+
 ## 🚀 Features
 *   **Tech Dictionary:** Features a custom list of programming terms (ARRAY, ASYNC, DEBUG, STACK, etc.).
 *   **Hybrid Validation:** Uses an external dictionary API to validate that user inputs are real words.
